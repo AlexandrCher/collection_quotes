@@ -1,19 +1,22 @@
 import 'package:collection_quotes/models/quote.dart';
+import 'package:collection_quotes/providers/quote_provider.dart';
 import 'package:collection_quotes/screens/edit_quote_screen.dart';
 import 'package:collection_quotes/services/quote_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class QuoteTile extends StatelessWidget {
   final Quote quote;
 
   const QuoteTile({super.key, required this.quote});
 
-  void _edit(BuildContext context) {
-    Navigator.pushNamed(
+  void _edit(BuildContext context) async {
+    await Navigator.pushNamed(
       context,
       EditQuoteScreen.routeName,
       arguments: quote,
     );
+    Provider.of<QuoteProvider>(context, listen: false).loadQuotes();
   }
 
   void _delete(BuildContext context) async {
@@ -31,6 +34,7 @@ class QuoteTile extends StatelessWidget {
     if (confirmed ?? false) {
       await QuoteService.deleteQuote(quote.id);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Цитата удалена')));
+      Provider.of<QuoteProvider>(context, listen: false).loadQuotes();
     }
   }
 

@@ -33,6 +33,10 @@ class QuoteService {
   }
 
   static Future<void> deleteQuote(String id) async {
-    await http.delete(Uri.parse('$baseUrl/$id.json'));
+    final response = await http.delete(Uri.parse('$baseUrl/$id.json'));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete quote');
+    }
   }
 }
